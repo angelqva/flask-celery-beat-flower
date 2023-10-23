@@ -1,12 +1,12 @@
-from flask import request
+from flask import request, Blueprint
 from beers.controllers import create_beer, retrieve_beer, update_beer, destroy_beer, list_beers, send_task
-from settings import constants
 from .tasks import sync_task
 
-router = constants.router
+
+beers_router = Blueprint("beers_router", __name__)
 
 
-@router.route('/')
+@beers_router.route('/')
 def hello():
     task_name = "sync_task"
     message = ""
@@ -17,7 +17,7 @@ def hello():
     return send_task(task_name=task_name, message=message)
 
 
-@router.route("/api/beers", methods=['GET', 'POST'])
+@beers_router.route("/api/beers", methods=['GET', 'POST'])
 def list_create_beers():
     if request.method == 'GET':
         return list_beers()
@@ -26,7 +26,7 @@ def list_create_beers():
         return create_beer(data=data)
 
 
-@router.route("/api/beers/<string:id>", methods=['GET', 'PUT', 'DELETE'])
+@beers_router.route("/api/beers/<string:id>", methods=['GET', 'PUT', 'DELETE'])
 def retrieve_update_destroy_beers(id):
     if request.method == 'GET':
         return retrieve_beer(id=id)

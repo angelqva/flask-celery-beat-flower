@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from celery import Celery
 from settings import constants
+from beers.urls import beer_router
 # from .extensions import db
 # from .views import main
 # from .utils import make_celery
@@ -27,6 +28,6 @@ def create_app():
     constants.migrate.init_app(app, constants.db)
     celery = make_celery(app)
     celery.set_default()
-    app.register_blueprint(constants.router)
+    app.register_blueprint(beer_router)
 
     return app, celery

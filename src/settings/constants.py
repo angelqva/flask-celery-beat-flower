@@ -1,11 +1,9 @@
 from os import getenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask import Blueprint
 
 db = SQLAlchemy()
 migrate = Migrate()
-router = Blueprint("router", __name__)
 redis_broker = getenv("REDIS_BROKER")
 redis_master = getenv("REDIS_MASTER")
 config = {

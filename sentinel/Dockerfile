@@ -1,5 +1,4 @@
 FROM redis:7
-RUN mkdir redis
-WORKDIR /redis
-COPY ./sentinel/sentinel.conf /redis
-CMD ["redis-sentinel" "./sentinel.conf"]
+RUN cd /etc && mkdir redis
+COPY ./sentinel.conf /etc/redis
+RUN chmod +rwx /etc/redis/sentinel.conf

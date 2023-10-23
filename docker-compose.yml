@@ -34,9 +34,12 @@ services:
             - 6379
 
     sentinel:
+        container_name: sentinel
         build:
             context: ./sentinel
-        #command: redis-sentinel /etc/redis/sentinel.conf
+        command: redis-sentinel /etc/redis/sentinel.conf
+        volumes:
+            - sentinel:/etc/redis/
         networks:
             - lan
         expose:
