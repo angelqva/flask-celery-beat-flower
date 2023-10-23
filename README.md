@@ -10,7 +10,7 @@
 ## Content
 
 -   `http://127.0.0.1:5555/` ***Flower logger of tasks***
--   `http://127.0.0.1:5000/api/` ***ejecutara la tarea sync_task***
+-   `http://127.0.0.1:5000/api/` ***execute task: sync_task***
 -   `http://127.0.0.1:5000/api/beers` ***method:Get -> list beers***
 -   `http://127.0.0.1:5000/api/beers` ***method:Post -> create beers***
 -   `http://127.0.0.1:5000/api/beers/<string:id>` ***method:Put -> update beers***
