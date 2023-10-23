@@ -1,4 +1,5 @@
 from os import getenv
+from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -23,5 +24,12 @@ config = {
     "accept_content": ["application/json"],
     "result_serializer": "json",
     "task_serializer": "json",
-    "timezone": "UTC"
+    "timezone": "UTC",
+    "CELERYBEAT_SCHEDULE":{
+        'periodic-every-60-seconds': {
+            'task': 'periodic',
+            'schedule': timedelta(seconds=60),
+            # 'args': (param1, param2, param3) if wanna pass arguments
+        },
+    }
 }

@@ -51,13 +51,8 @@ services:
         container_name: web
         build:
             context: .
-        environment:
-            FLASK_APP: run
-            FLASK_DEBUG: 1
-            DATABASE_URL: postgresql+psycopg2://postgres:root@db:5432/sample
-            REDIS_BROKER: sentinel://sentinel:26379/0
-            REDIS_MASTER: mymaster
-            SECRET_KEY: 123142qfrqgvqbovuwg0b1h7980yhbv
+        env_file:
+            - ./.env
         volumes:
             - ./src:/app
         command: flask run -h 0.0.0.0
@@ -71,16 +66,26 @@ services:
         container_name: celery
         build:
             context: .
-        environment:
-            FLASK_APP: run
-            FLASK_DEBUG: 1
-            DATABASE_URL: postgresql+psycopg2://postgres:root@db:5432/sample
-            REDIS_BROKER: sentinel://sentinel:26379/0
-            REDIS_MASTER: mymaster
-            SECRET_KEY: 123142qfrqgvqbovuwg0b1h7980yhbv
+        env_file:
+            - ./.env
         volumes:
             - ./src:/app
         command: celery -A run.celery worker --loglevel=info
+        depends_on:
+            - sentinel
+        networks:
+            - lan
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+    beat:
+        container_name: beat
+        build:
+            context: .
+        env_file:
+            - ./.env
+        volumes:
+            - ./src:/app
+        command: celery -A run.celery beat -l info
         depends_on:
             - sentinel
         networks:
@@ -91,13 +96,8 @@ services:
         container_name: flower
         build:
             context: .
-        environment:
-            FLASK_APP: run
-            FLASK_DEBUG: 1
-            DATABASE_URL: postgresql+psycopg2://postgres:root@182.22.0.50:5432/sample
-            REDIS_BROKER: sentinel://sentinel:26379/0
-            REDIS_MASTER: mymaster
-            SECRET_KEY: 123142qfrqgvqbovuwg0b1h7980yhbv
+        env_file:
+            - ./.env
         volumes:
             - ./src:/app
         command: >
