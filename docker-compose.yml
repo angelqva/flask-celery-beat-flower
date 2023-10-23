@@ -106,7 +106,7 @@ services:
         extra_hosts:
             - "host.docker.internal:host-gateway"
         depends_on:
-            - celery
+            - sentinel
         ports:
             - 5555:5555
 
