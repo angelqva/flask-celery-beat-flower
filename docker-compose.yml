@@ -13,14 +13,14 @@ services:
             - 5432
         networks:
             lan:
-                ipv4_address: 182.22.0.50
+                ipv4_address: 183.22.0.50
     master:
         container_name: master
         image: redis:7
         command: redis-server --port 6379
         networks:
             lan:
-                ipv4_address: 182.22.0.100
+                ipv4_address: 183.22.0.100
         expose:
             - 6379
     slave:
@@ -29,7 +29,7 @@ services:
         command: redis-server --port 6379 --slaveof master 6379
         networks:
             lan:
-                ipv4_address: 182.22.0.200
+                ipv4_address: 183.22.0.200
         expose:
             - 6379
 
@@ -113,7 +113,7 @@ networks:
         ipam:
             driver: default
             config:
-                - subnet: 182.22.0.0/16
+                - subnet: 183.22.0.0/16
 
 volumes:
     postgres_data:
