@@ -52,22 +52,26 @@ services:
         environment:
             FLASK_APP: run
             FLASK_DEBUG: 1
-            DATABASE_URL: postgresql+psycopg2://postgres:root@182.22.0.50:5432/sample
+            DATABASE_URL: postgresql+psycopg2://postgres:root@db:5432/sample
             REDIS_BROKER: sentinel://sentinel:26379/0
             REDIS_MASTER: mymaster
             SECRET_KEY: 123142qfrqgvqbovuwg0b1h7980yhbv
         volumes:
             - ./src:/app
         command: flask run -h 0.0.0.0
+        networks:
+            - lan
         ports:
             - 5000:5000
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
     celery:
         build:
             context: .
         environment:
             FLASK_APP: run
             FLASK_DEBUG: 1
-            DATABASE_URL: postgresql+psycopg2://postgres:root@182.22.0.50:5432/sample
+            DATABASE_URL: postgresql+psycopg2://postgres:root@db:5432/sample
             REDIS_BROKER: sentinel://sentinel:26379/0
             REDIS_MASTER: mymaster
             SECRET_KEY: 123142qfrqgvqbovuwg0b1h7980yhbv
@@ -103,6 +107,13 @@ services:
             - celery
         ports:
             - 5555:5555
+
+networks:
+    lan:
+        ipam:
+            driver: default
+            config:
+                - subnet: 182.22.0.0/16
 
 volumes:
     postgres_data:
