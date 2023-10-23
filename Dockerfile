@@ -12,4 +12,4 @@ COPY ./entrypoint.sh /entry
 RUN cd /entry && chmod +x ./entrypoint.sh
 WORKDIR /app
 
-ENTRYPOINT ["/entry/entrypoint.bash"]
+ENTRYPOINT ["/entry/entrypoint.sh"]
