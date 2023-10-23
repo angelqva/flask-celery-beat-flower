@@ -12,18 +12,18 @@ config = {
     "SQLALCHEMY_DATABASE_URI": getenv("DATABASE_URL"),
     "SQLALCHEMY_TRACK_MODIFICATIONS": True,
     "SECRET_KEY": getenv("SECRET_KEY"),
-    "CELERY_BROKER_URL": redis_broker,
-    "CELERY_BROKER_TRANSPORT_OPTIONS": {
+    "broker_url": redis_broker,
+    "brocker_transport_options": {
         'master_name': redis_master,
         'sentinels': [(redis_broker, 26379)],
     },
-    "CELERY_RESULT_BACKEND": redis_broker,
-    "CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS": {
+    "result_backend": redis_broker,
+    "result_backend_transport_options": {
         'master_name': redis_master,
         'sentinels': [(redis_broker, 26379)],
     },
-    "CELERY_ACCEPT_CONTENT": ["application/json"],
-    "CELERY_RESULT_SERIALIZER": "json",
-    "CELERY_TASK_SERIALIZER": "json",
-    "CELERY_TIMEZONE": "UTC"
+    "accept_content": ["application/json"],
+    "result_serializer": "json",
+    "task_serializer": "json",
+    "timezone": "UTC"
 }
