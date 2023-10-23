@@ -47,6 +47,7 @@ services:
             - master
             - slave
     web:
+        container_name: web
         build:
             context: .
         environment:
@@ -66,6 +67,7 @@ services:
         extra_hosts:
             - "host.docker.internal:host-gateway"
     celery:
+        container_name: celery
         build:
             context: .
         environment:
