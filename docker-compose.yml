@@ -36,9 +36,7 @@ services:
     sentinel:
         build:
             context: ./sentinel
-        command: redis-sentinel /etc/redis/sentinel.conf
-        volumes:
-            - sentinel:/etc/redis
+        #command: redis-sentinel /etc/redis/sentinel.conf
         networks:
             - lan
         expose:

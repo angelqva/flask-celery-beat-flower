@@ -1,3 +1,5 @@
 FROM redis:7
-RUN cd /etc && mkdir redis
-COPY ./sentinel/sentinel.conf /etc/redis/
+RUN mkdir redis
+WORKDIR /redis
+COPY ./sentinel/sentinel.conf /redis
+CMD ["redis-sentinel" "./sentinel.conf"]
