@@ -9,7 +9,7 @@ from .repository import BEER_REPOSITORY
 # TEN_MINUTES = 10 * 60 * 1000
 
 
-@shared_task(bind=True, base=AbortableTask)
+@shared_task(name="sync_task", bind=True, base=AbortableTask)
 def sync_task(self):
     time.sleep(10)
     response = BEER_REPOSITORY.counts()
