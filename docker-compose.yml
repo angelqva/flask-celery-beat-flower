@@ -1,0 +1,108 @@
+services:
+    db:
+        container_name: db
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: root
+            POSTGRES_USER: postgres
+            POSTGRES_DB: sample
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        expose:
+            - 5432
+        networks:
+            lan:
+                ipv4_address: 182.22.0.50
+    master:
+        container_name: master
+        image: redis:7
+        command: redis-server --port 6379
+        networks:
+            lan:
+                ipv4_address: 182.22.0.100
+        expose:
+            - 6379
+    slave:
+        container_name: slave
+        image: redis:7
+        command: redis-server --port 6379 --slaveof master 6379
+        networks:
+            lan:
+                ipv4_address: 182.22.0.200
+        expose:
+            - 6379
+
+    sentinel:
+        container_name: sentinel
+        image: redis:7
+        command: redis-sentinel /etc/redis/sentinel.conf
+        volumes:
+            - ./redis_config/sentinel.conf:/etc/redis/sentinel.conf
+        networks:
+            - lan
+        expose:
+            - 26379
+        depends_on:
+            - master
+            - slave
+    web:
+        build:
+            context: .
+        environment:
+            FLASK_APP: run
+            FLASK_DEBUG: 1
+            DATABASE_URL: postgresql+psycopg2://postgres:root@182.22.0.50:5432/sample
+            REDIS_BROKER: sentinel://sentinel:26379/0
+            REDIS_MASTER: mymaster
+            SECRET_KEY: 123142qfrqgvqbovuwg0b1h7980yhbv
+        volumes:
+            - ./src:/app
+        command: flask run -h 0.0.0.0
+        ports:
+            - 5000:5000
+    celery:
+        build:
+            context: .
+        environment:
+            FLASK_APP: run
+            FLASK_DEBUG: 1
+            DATABASE_URL: postgresql+psycopg2://postgres:root@182.22.0.50:5432/sample
+            REDIS_BROKER: sentinel://sentinel:26379/0
+            REDIS_MASTER: mymaster
+            SECRET_KEY: 123142qfrqgvqbovuwg0b1h7980yhbv
+        volumes:
+            - ./src:/app
+        command: celery -A run.celery worker --loglevel=info
+        depends_on:
+            - sentinel
+        networks:
+            - lan
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+    flower:
+        container_name: flower
+        build:
+            context: .
+        environment:
+            FLASK_APP: run
+            FLASK_DEBUG: 1
+            DATABASE_URL: postgresql+psycopg2://postgres:root@182.22.0.50:5432/sample
+            REDIS_BROKER: sentinel://sentinel:26379/0
+            REDIS_MASTER: mymaster
+            SECRET_KEY: 123142qfrqgvqbovuwg0b1h7980yhbv
+        volumes:
+            - ./src:/app
+        command: >
+            celery -A run.celery flower --broker=sentinel://sentinel:26379/0 --broker_transport_options='{"master_name": "mymaster", "sentinels": [("sentinel", 26379)]}'
+        networks:
+            - lan
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        depends_on:
+            - celery
+        ports:
+            - 5555:5555
+
+volumes:
+    postgres_data:
