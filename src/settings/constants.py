@@ -13,12 +13,12 @@ config = {
     "SQLALCHEMY_TRACK_MODIFICATIONS": True,
     "SECRET_KEY": getenv("SECRET_KEY"),
     "broker_url": redis_broker,
-    "CELERY_BROKER_TRANSPORT_OPTIONS": {
+    "broker_transport_options": {
         'master_name': redis_master,
         'sentinels': [(redis_broker, 26379)],
     },
     "result_backend": redis_broker,
-    "CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS": {
+    "result_backend_transport_options": {
         'master_name': redis_master,
         'sentinels': [(redis_broker, 26379)],
     },
