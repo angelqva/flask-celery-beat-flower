@@ -5,9 +5,12 @@ from .tasks import sync_task
 
 beers_router = Blueprint("beers_router", __name__)
 
-
 @beers_router.route('/')
 def hello():
+    return "Hello World!!"
+
+@beers_router.route('/api')
+def sample():
     task_name = "sync_task"
     message = ""
     try:

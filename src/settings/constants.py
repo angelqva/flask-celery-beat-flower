@@ -25,7 +25,7 @@ config = {
     "result_serializer": "json",
     "task_serializer": "json",
     "timezone": "UTC",
-    "CELERYBEAT_SCHEDULE":{
+    "beat_schedule":{
         'periodic-every-60-seconds': {
             'task': 'periodic',
             'schedule': timedelta(seconds=60),
